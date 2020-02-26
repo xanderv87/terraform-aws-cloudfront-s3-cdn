@@ -415,3 +415,21 @@ variable "website_enabled" {
   default     = false
   description = "Set to true to use an S3 static website as origin"
 }
+
+variable "reverse_proxy_enabled" {
+  type = bool
+  default = false
+  description = "Set to true to enable reverse proxy to api gateway"
+}
+
+variable "reverse_proxy_path" {
+  type = string
+  default = "api"
+  description = "Path where reverse proxy is served"
+}
+
+variable "reverse_proxy_invoke_url" {
+  type = string
+  default = ""
+  description = "Invoke url for api-gateway for reverse proxy"
+}

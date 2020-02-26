@@ -232,6 +232,22 @@ resource "aws_cloudfront_distribution" "default" {
     }
   }
 
+  dynamic "origin" {
+    for_each = var.reverse_proxy_enabled ? [1]: []
+    content {
+      domain_name = replace(var.reverse_proxy_invoke_url, "/^https?://([^/]*).*/", "$1")
+      origin_id   = "apigw"
+      origin_path = "/${var.reverse_proxy_path}"
+
+      custom_origin_config {
+        http_port              = 80
+        https_port             = 443
+        origin_protocol_policy = "https-only"
+        origin_ssl_protocols   = ["TLSv1.2"]
+      }
+    }
+  }
+
   viewer_certificate {
     acm_certificate_arn            = var.acm_certificate_arn
     ssl_support_method             = var.acm_certificate_arn == "" ? "" : "sni-only"
@@ -304,6 +320,28 @@ resource "aws_cloudfront_distribution" "default" {
           lambda_arn   = lambda_function_association.value.lambda_arn
         }
       }
+    }
+  }
+  dynamic "ordered_cache_behavior" {
+    for_each = var.reverse_proxy_enabled ? [1]: []
+    content {
+      path_pattern     = "/${var.reverse_proxy_path}/*"
+      allowed_methods  = ["DELETE", "GET", "HEAD", "OPTIONS", "PATCH", "POST", "PUT"]
+      cached_methods   = ["GET", "HEAD"]
+      target_origin_id = "apigw"
+
+      default_ttl = 0
+      min_ttl     = 0
+      max_ttl     = 0
+
+      forwarded_values {
+        query_string = true
+        cookies {
+          forward = "all"
+        }
+      }
+
+      viewer_protocol_policy = "redirect-to-https"
     }
   }
 

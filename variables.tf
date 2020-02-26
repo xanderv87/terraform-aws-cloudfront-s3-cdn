@@ -428,7 +428,13 @@ variable "reverse_proxy_path" {
   description = "Path where reverse proxy is served"
 }
 
-variable "reverse_proxy_invoke_url" {
+variable "reverse_proxy_apigw_stage" {
+  type = string
+  default = ""
+  description = "Stage name for apigw"
+}
+
+variable "reverse_proxy_apigw_invoke_url" {
   type = string
   default = ""
   description = "Invoke url for api-gateway for reverse proxy"

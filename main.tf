@@ -237,7 +237,7 @@ resource "aws_cloudfront_distribution" "default" {
     content {
       domain_name = replace(var.reverse_proxy_apigw_invoke_url, "/^https?://([^/]*).*/", "$1")
       origin_id   = "apigw"
-      origin_path = var.reverse_proxy_apigw_stage == var.reverse_proxy_path ? "/" : "/${var.reverse_proxy_path}"
+      origin_path = var.reverse_proxy_apigw_stage == var.reverse_proxy_path ? "" : "/${var.reverse_proxy_path}"
 
       custom_origin_config {
         http_port              = 80

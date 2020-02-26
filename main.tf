@@ -335,7 +335,7 @@ resource "aws_cloudfront_distribution" "default" {
       max_ttl     = 0
 
       forwarded_values {
-        headers = ["*"]
+        headers = var.reverse_proxy_forwarded_headers
         query_string = true
         cookies {
           forward = "all"

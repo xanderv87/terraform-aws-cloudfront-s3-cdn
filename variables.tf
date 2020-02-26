@@ -439,3 +439,9 @@ variable "reverse_proxy_apigw_invoke_url" {
   default = ""
   description = "Invoke url for api-gateway for reverse proxy"
 }
+
+variable "reverse_proxy_forwarded_headers" {
+  type = list(string)
+  default = []
+  description = "Headers to be forwarded towards apigw"
+}
